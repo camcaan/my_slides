@@ -161,6 +161,8 @@ NHSRdatasets::LOS_model %>%
 ```{r echo = TRUE}
 NHSRdatasets::LOS_model %>% 
   head() #<<
+
+
 ```
 
 
