@@ -280,7 +280,6 @@ legend(365, .8, c("Transplant to platelet recovery (1:2)",
                   "Platelet recovery to death (2:3)"), lty = 1:3, bty = 'n')
 ```
 
-
 ]
 ]
 ]
