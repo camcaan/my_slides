@@ -51,7 +51,7 @@ class: inverse, middle, center
 ---
 class: middle
 
-# A retrospective cohort design, describing the rates of repeated hospital admissions, transition to an institution and death and the clincal factors affecting the rates of these events.
+# A retrospective cohort design, describing the rates of repeated hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
 
 ---
 
@@ -123,8 +123,101 @@ class: middle
 So, instead of covariates changing from line to line as in ordinary survival analysis, in MSM the status variable changes; it contains the state that was entered at time2.
 --
 
-* **We will need an identified variable to indicate which rows of the data frame belong to each subject.**
+* **We will need an id variable to indicate which rows of the data frame belong to each subject.**
 --
+
+---
+# European Blood and Marrow Transplant data
+
+* `prtime` - time in days from transplant to platelet recovery or last follow-up
+* `rfstime` - time in days from transplant to relapse or death or last follow-up
+* `dissub` - Disease subclassification : levels = AML, ALL, CML
+* `drmatch` - Donor recipient 
+* `tcd` - T cell depletion
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; id &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; prtime &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; prstat &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; rfstime &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; rfsstat &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; dissub &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; age &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; drmatch &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; tcd &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 744 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CML &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &amp;gt;40 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gender mismatch &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No TCD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CML &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &amp;gt;40 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No gender mismatch &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No TCD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 135 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CML &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &amp;gt;40 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No gender mismatch &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No TCD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 995 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; AML &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 20-40 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No gender mismatch &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No TCD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 422 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; AML &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 20-40 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No gender mismatch &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No TCD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 119 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ALL &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &amp;gt;40 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No gender mismatch &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; No TCD &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
 
 
 
@@ -132,199 +225,243 @@ So, instead of covariates changing from line to line as in ordinary survival ana
 class: center, middle
 
 ```r
-survival::myeloid %&gt;% 
-head() %&gt;% 
-  knitr::kable(format = "html")
+states &lt;- c("Transplant", "Platelet recovery", 
+            "Relapse or death")
+tmat &lt;- matrix(0, 3,3, dimnames=list(states, states))
+tmat[1,2] &lt;- tmat[1,3] &lt;- tmat[2,3] &lt;- 1 # arrows
+statefig(cbind((1:3)/4, c(1,3,1)/4), tmat)
 ```
 
-&lt;table&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:right;"&gt; id &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; trt &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; sex &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; futime &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; death &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; txtime &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; crtime &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; rltime &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 235 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 44 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 113 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; m &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 286 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 200 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1983 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 38 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2137 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 245 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 25 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 326 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 112 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 56 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 200 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2041 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 102 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
----
-
-# Multi-state using `myeloid` data
-
-* `futime`, `death` - time to death or last follow-up (death)
-* `txtime` - time to  stem cell transplant (SCT)
-* `crtime` - time to complete response (CR)
-* `rltime` - time to relapse of disease (relapse)
-
-First look at a simple multi-state diagram for the myeloid data.
-
-![](Slides_2_files/figure-html/statefig2-1.png)&lt;!-- --&gt;
+![](Slides_2_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 
 ---
 class: inverse, middle, center
 
-# Creating the data set
+
+# Multi-state model using `ebmt3` data
 
 ---
-class: middle, center
-###We create the counting process dataset using the `tmerge` function###
-
-
-
+# Create the analysis data
 
 ```r
-mdata &lt;- tmerge(myeloid[, c("id" , "trt", "sex")],
-                myeloid, id= id,
-                death = event(futime, death), cr = event(crtime))
+edata &lt;- tmerge(ebmt3[, c("id", "age", "dissub", "drmatch", "tcd")],ebmt3, id = id, 
+                rstat = event(rfstime, rfsstat),
+                pstat = event(prtime, prstat),
+                priorpr = tdc(prtime))
 
-head(mdata)
+print(edata[15:20, -(3:5)])
 ```
 
 ```
-##   id trt sex tstart tstop death cr
-## 1  1   B   f      0    44     0  1
-## 2  1   B   f     44   235     1  0
-## 3  2   A   m      0   286     1  0
-## 4  3   A   f      0    38     0  1
-## 5  3   A   f     38  1983     0  0
-## 6  4   B   f      0    25     0  1
+##    id   age tstart tstop rstat pstat priorpr
+## 15  8  &lt;=20      0    35     0     1       0
+## 16  8  &lt;=20     35  1448     0     0       1
+## 17  9 20-40      0  1264     0     0       0
+## 18 10   &gt;40      0   338     1     0       0
+## 19 11 20-40      0    50     0     1       0
+## 20 11 20-40     50    84     1     0       1
 ```
+
 ---
 class: inverse, middle, center
 
- ## Adding a time-dependent covariate## 
+# Creating the factor outcome
+
 ---
+### Make the event variable a factor and run `survcheck()`###
+
 
 ```r
-mdata &lt;- tmerge(mdata, myeloid, id= id, priortx = tdc(txtime))
-mdata[1:7, ]
-```
-
-```
-##   id trt sex tstart tstop death cr priortx
-## 1  1   B   f      0    44     0  1       0
-## 2  1   B   f     44   235     1  0       0
-## 3  2   A   m      0   200     0  0       0
-## 4  2   A   m    200   286     1  0       1
-## 5  3   A   f      0    38     0  1       0
-## 6  3   A   f     38  1983     0  0       0
-## 7  4   B   f      0    25     0  1       0
-```
-
-```r
-summary(mdata)
+edata$event &lt;- with(edata, factor(pstat + 2*rstat, 0:2,
+                                  labels = c("censor", "PR", "RelDeath")))
+levels(edata$drmatch) &lt;- c("Match", "Mismatch")
+survcheck(Surv(tstart, tstop, event) ~ 1, data = edata, id = id)
 ```
 
 ```
 ## Call:
-## tmerge(data1 = mdata, data2 = myeloid, id = id, priortx = tdc(txtime))
+## survcheck(formula = Surv(tstart, tstop, event) ~ 1, data = edata, 
+##     id = id)
 ## 
-##         early late gap within boundary leading trailing tied missid
-## death       0    0   0      0        0       0      646    0      0
-## cr          0    0   0    454        0       0        0    0      0
-## priortx     0    0   0    362        1       0        1    0      0
+## Unique identifiers       Observations        Transitions 
+##               2204               3373               2010 
+## 
+## Transitions table:
+##           to
+## from         PR RelDeath (censored)
+##   (s0)     1169      458        577
+##   PR          0      383        786
+##   RelDeath    0        0          0
+## 
+## Number of subjects with 0, 1, ... transitions to each state:
+##           count
+## state         0    1   2
+##   PR       1035 1169   0
+##   RelDeath 1363  841   0
+##   (any)     577 1244 383
 ```
+---
+class: inverse, middle, center
+
+ ## Aalen-Johansen P(t) curves## 
+---
+ .panelset[
+.panel[.panel-name[fit 1]
+
+
+```r
+surv1 &lt;- survfit(Surv(tstart, tstop, event) ~ 1, edata, id = id)
+surv1$transitions
+```
+
+```
+##           to
+## from         PR RelDeath (censored)
+##   (s0)     1169      458        577
+##   PR          0      383        786
+##   RelDeath    0        0          0
+```
+
+.panel[.panel-name[plot 1]
+
+![](Slides_2_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+]
+]
+]
 
 ---
 class: inverse, middle, center
 
- ## Create a factor for the multi-state outcome## 
+ ## Transition-specific covariate effect estimation## 
  
 ---
+.panelset[
+.panel[.panel-name[coxph]
 
 
 ```r
-mdata$event &lt;- with(mdata, factor(cr + 2*death, levels = 0:2,
-                       labels = c("none", "CR", "Death")))
-
-
-head(mdata)
+efit1 &lt;- coxph(Surv(tstart, tstop, event) ~ dissub + age + drmatch + tcd, 
+               id = id , data = edata, ties = "breslow")
 ```
+.panel[.panel-name[coefficients]
 
 ```
-##   id trt sex tstart tstop death cr priortx event
-## 1  1   B   f      0    44     0  1       0    CR
-## 2  1   B   f     44   235     1  0       0 Death
-## 3  2   A   m      0   200     0  0       0  none
-## 4  2   A   m    200   286     1  0       1 Death
-## 5  3   A   f      0    38     0  1       0    CR
-## 6  3   A   f     38  1983     0  0       0  none
+## Call:
+## coxph(formula = Surv(tstart, tstop, event) ~ dissub + age + drmatch + 
+##     tcd, data = edata, ties = "breslow", id = id)
+## 
+##                  
+## 1:2                 coef exp(coef) se(coef) robust se    z     p
+##   dissubALL       -0.044     0.957    0.078     0.074 -0.6  0.55
+##   dissubCML       -0.297     0.743    0.068     0.068 -4.4 1e-05
+##   age20-40        -0.165     0.848    0.079     0.076 -2.2  0.03
+##   age&gt;40          -0.090     0.914    0.086     0.083 -1.1  0.28
+##   drmatchMismatch  0.046     1.047    0.067     0.064  0.7  0.47
+##   tcdTCD           0.429     1.536    0.080     0.075  5.7 1e-08
+## 
+##                  
+## 1:3                 coef exp(coef) se(coef) robust se    z     p
+##   dissubALL        0.256     1.292    0.135     0.139  1.8  0.07
+##   dissubCML        0.017     1.017    0.108     0.109  0.2  0.88
+##   age20-40         0.255     1.291    0.151     0.149  1.7  0.09
+##   age&gt;40           0.526     1.693    0.158     0.157  3.4 8e-04
+##   drmatchMismatch -0.075     0.928    0.110     0.108 -0.7  0.49
+##   tcdTCD           0.297     1.345    0.150     0.145  2.0  0.04
+## 
+##                  
+## 2:3                coef exp(coef) se(coef) robust se   z     p
+##   dissubALL       0.136     1.146    0.148     0.153 0.9  0.37
+##   dissubCML       0.247     1.280    0.117     0.117 2.1  0.04
+##   age20-40        0.062     1.063    0.153     0.155 0.4  0.69
+##   age&gt;40          0.581     1.787    0.160     0.164 3.5 4e-04
+##   drmatchMismatch 0.173     1.189    0.115     0.113 1.5  0.13
+##   tcdTCD          0.201     1.222    0.126     0.120 1.7  0.09
+## 
+##  States:  1= (s0), 2= PR, 3= RelDeath 
+## 
+## Likelihood ratio test=118  on 18 df, p=&lt;2e-16
+## n= 3373, number of events= 2010
 ```
-???
-If the CR time is missing, then use the death indicator and multiply it by 2 so we get a numeric value of 2 for those where dead and 0 otherwise and those that have a CR will get a value of 1.
+
+.panel[.panel-name[Baseline Hazard]
+![](Slides_2_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 
+]
+]
+]
+]
+---
+class: inverse, middle, center
+
+ ## Proportional hazard model## 
+ 
 ---
 
+.panelset[
+.panel[.panel-name[proportional Hazard]
+
+```r
+efit2 &lt;- coxph(list(Surv(tstart, tstop, event) ~ dissub + age + drmatch + tcd,
+               0:state("RelDeath") ~ 1 / common,
+               "PR":"RelDeath" ~ priorpr),
+               id = id, data = edata, ties = "breslow")
+```
 
 
+
+
+.panel[.panel-name[Coefficients]
+
+```
+##       dissubALL_1:2       dissubCML_1:2        age20-40_1:2          age&gt;40_1:2 
+##             -0.0436             -0.2972             -0.1646             -0.0898 
+## drmatchMismatch_1:2          tcdTCD_1:2       dissubALL_1:3       dissubCML_1:3 
+##              0.0458              0.4291              0.2610              0.0036 
+##        age20-40_1:3          age&gt;40_1:3 drmatchMismatch_1:3          tcdTCD_1:3 
+##              0.2509              0.5258             -0.0721              0.3185 
+##       dissubALL_2:3       dissubCML_2:3        age20-40_2:3          age&gt;40_2:3 
+##              0.1398              0.2503              0.0556              0.5625 
+## drmatchMismatch_2:3          tcdTCD_2:3             priorpr 
+##              0.1691              0.2110             -0.3786
+```
+
+]
+]
+]
+
+???
+In this model the transition hazards into relapse or death(transitions 2 and 3) are assumed to be proportional.For this purpose tranistion 1 blong to one stratum and transition 2 and 3 belong to another stratum.the baseline hazard is shared for transition 1 to 3 and transition 2 to 3 because they transition into same sate (state 3).The fit below adds this constraint by stating that two transitions have a common intercept (1) and adding a coefficient for prior plasma recovery to the two transitions.Now every data row at risk for a 2:3 transition has priorpr = 1 and the rows for a 1:3 all have priorpr = 0
+
+---
+class: inverse, middle, center
+
+ ## Prediction## 
+ 
+---
+.panelset[
+.panel[.panel-name[Prediction model]
+
+```r
+edummy &lt;- expand.grid(age = "&lt;=20", dissub = "AML", drmatch = "Mismatch",
+                      tcd = c("No TCD", "TCD"), priorpr = 1)
+
+ecurve2 &lt;- survfit(efit2, newdata = edummy)
+```
+
+.panel[.panel-name[Predition probabilities plot]
+![](Slides_2_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+]
+]
+]
+
+???
+we will now predict the future state of a patient, using as our reference set two subjects who are 
+&lt;= 20 years old, gender matched, AML, with and without T-cell depletion.
+we will use the fit from the proportional hazard model for the transitions to Relapse/Death and 
+a separate baseline hazard for the PR transition
 ---
 class: inverse, middle, center
 

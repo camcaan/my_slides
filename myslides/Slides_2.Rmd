@@ -75,7 +75,7 @@ class: inverse, middle, center
 ---
 class: middle
 
-# A retrospective cohort design, describing the rates of repeated hospital admissions, transition to an institution and death and the clincal factors affecting the rates of these events.
+# A retrospective cohort design, describing the rates of repeated hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
 
 ---
 
@@ -147,97 +147,210 @@ class: middle
 So, instead of covariates changing from line to line as in ordinary survival analysis, in MSM the status variable changes; it contains the state that was entered at time2.
 --
 
-* **We will need an identified variable to indicate which rows of the data frame belong to each subject.**
+* **We will need an id variable to indicate which rows of the data frame belong to each subject.**
 --
+
+---
+# European Blood and Marrow Transplant data
+
+* `prtime` - time in days from transplant to platelet recovery or last follow-up
+* `rfstime` - time in days from transplant to relapse or death or last follow-up
+* `dissub` - Disease subclassification : levels = AML, ALL, CML
+* `drmatch` - Donor recipient 
+* `tcd` - T cell depletion
+```{r}
+library(mstate)
+data("ebmt3")
+library(survival)
+
+
+
+ebmt3 %>% 
+head() %>% 
+  knitr::kable(format = "html")
+
+```
+
 
 
 
 ---
 class: center, middle
 ```{r, echo = TRUE}
-survival::myeloid %>% 
-head() %>% 
-  knitr::kable(format = "html")
-```
-
----
-
-# Multi-state using `myeloid` data
-
-* `futime`, `death` - time to death or last follow-up (death)
-* `txtime` - time to  stem cell transplant (SCT)
-* `crtime` - time to complete response (CR)
-* `rltime` - time to relapse of disease (relapse)
-
-First look at a simple multi-state diagram for the myeloid data.
-
-```{r statefig2, echo=FALSE}
-# illness-death model
-states <- c("Initial", "CR","Death")
-cmat <- matrix(0L, 3, 3, dimnames = list(states, states))
-cmat[1,] <- 1
-cmat[2,3] <- 1
-statefig(c(1,2), cmat)
+states <- c("Transplant", "Platelet recovery", 
+            "Relapse or death")
+tmat <- matrix(0, 3,3, dimnames=list(states, states))
+tmat[1,2] <- tmat[1,3] <- tmat[2,3] <- 1 # arrows
+statefig(cbind((1:3)/4, c(1,3,1)/4), tmat)
 ```
 
 ---
 class: inverse, middle, center
 
-# Creating the data set
+
+# Multi-state model using `ebmt3` data
 
 ---
-class: middle, center
-###We create the counting process dataset using the `tmerge` function###
+# Create the analysis data
+```{r statefig2, echo=TRUE}
+
+edata <- tmerge(ebmt3[, c("id", "age", "dissub", "drmatch", "tcd")],ebmt3, id = id, 
+                rstat = event(rfstime, rfsstat),
+                pstat = event(prtime, prstat),
+                priorpr = tdc(prtime))
+
+print(edata[15:20, -(3:5)])
 
 
+```
+
+---
+class: inverse, middle, center
+
+# Creating the factor outcome
+
+---
+### Make the event variable a factor and run `survcheck()`###
 
 ```{r echo = TRUE}
-mdata <- tmerge(myeloid[, c("id" , "trt", "sex")],
-                myeloid, id= id,
-                death = event(futime, death), cr = event(crtime))
+edata$event <- with(edata, factor(pstat + 2*rstat, 0:2,
+                                  labels = c("censor", "PR", "RelDeath")))
+levels(edata$drmatch) <- c("Match", "Mismatch")
+survcheck(Surv(tstart, tstop, event) ~ 1, data = edata, id = id)
 
-head(mdata)
- 
 ```
 ---
 class: inverse, middle, center
 
- ## Adding a time-dependent covariate## 
+ ## Aalen-Johansen P(t) curves## 
 ---
-```{r echo = TRUE}
-mdata <- tmerge(mdata, myeloid, id= id, priortx = tdc(txtime))
-mdata[1:7, ]
- 
+ .panelset[
+.panel[.panel-name[fit 1]
+
+```{r, echo= TRUE}
+surv1 <- survfit(Surv(tstart, tstop, event) ~ 1, edata, id = id)
+surv1$transitions
 ```
-```{r, echo=TRUE}
-summary(mdata)
-```
 
----
-class: inverse, middle, center
-
- ## Create a factor for the multi-state outcome## 
- 
----
-
-```{r, echo=TRUE}
-
-mdata$event <- with(mdata, factor(cr + 2*death, levels = 0:2,
-                       labels = c("none", "CR", "Death")))
-
-
-head(mdata)
-```
-???
-If the CR time is missing, then use the death indicator and multiply it by 2 so we get a numeric value of 2 for those where dead and 0 otherwise and those that have a CR will get a value of 1.
-
-
----
+.panel[.panel-name[plot 1]
 
 ```{r}
-# survcheck(Surv(tstart, tstop, event)~ 1, id = id , data = mdata)
+plot(surv1, col = 1:2, xscale = 365.25 , lwd = 2,
+     xlab = "Years since transplant" , ylab = "Fraction in state")
+legend(1000, .2, c("Platelet recovery", "Death or Relapse"),
+       lty = 1, col = 1:2, lwd = 2, bty = 'n')
 ```
 
+]
+]
+]
+
+---
+class: inverse, middle, center
+
+ ## Transition-specific covariate effect estimation## 
+ 
+---
+.panelset[
+.panel[.panel-name[coxph]
+
+```{r,echo=TRUE}
+efit1 <- coxph(Surv(tstart, tstop, event) ~ dissub + age + drmatch + tcd, 
+               id = id , data = edata, ties = "breslow")
+
+```
+.panel[.panel-name[coefficients]
+```{r}
+
+print(efit1, digits = 2)
+```
+
+.panel[.panel-name[Baseline Hazard]
+```{r, echo=FALSE}
+# Now draw the figure for baseline hazards
+# a dataset containing the 'reference' categories 
+
+rdata <- data.frame(dissub = "AML", age = "<=20" , "drmatch" = "Match" , tcd = "No TCD" )
+
+esurv1 <- survfit(efit1, newdata = rdata)
+plot(esurv1, cumhaz = TRUE, lty = 1:3, xscale = 365.25, xmax = 7*365.25,
+xlab = "Years since transplant", ylab = "Cumulative hazard")
+legend(365, .8, c("Transplant to platelet recovery (1:2)",
+                  "Transplant to death (1:3)",
+                  "Platelet recovery to death (2:3)"), lty = 1:3, bty = 'n')
+```
+
+
+]
+]
+]
+]
+---
+class: inverse, middle, center
+
+ ## Proportional hazard model## 
+ 
+---
+
+.panelset[
+.panel[.panel-name[proportional Hazard]
+```{r, echo=TRUE}
+efit2 <- coxph(list(Surv(tstart, tstop, event) ~ dissub + age + drmatch + tcd,
+               0:state("RelDeath") ~ 1 / common,
+               "PR":"RelDeath" ~ priorpr),
+               id = id, data = edata, ties = "breslow")
+
+```
+
+
+
+
+.panel[.panel-name[Coefficients]
+```{r}
+print(coef(efit2, type = "matrix"), digits = 2)
+```
+
+]
+]
+]
+
+???
+In this model the transition hazards into relapse or death(transitions 2 and 3) are assumed to be proportional.For this purpose tranistion 1 blong to one stratum and transition 2 and 3 belong to another stratum.the baseline hazard is shared for transition 1 to 3 and transition 2 to 3 because they transition into same sate (state 3).The fit below adds this constraint by stating that two transitions have a common intercept (1) and adding a coefficient for prior plasma recovery to the two transitions.Now every data row at risk for a 2:3 transition has priorpr = 1 and the rows for a 1:3 all have priorpr = 0
+
+---
+class: inverse, middle, center
+
+ ## Prediction## 
+ 
+---
+.panelset[
+.panel[.panel-name[Prediction model]
+```{r, echo=TRUE}
+edummy <- expand.grid(age = "<=20", dissub = "AML", drmatch = "Mismatch",
+                      tcd = c("No TCD", "TCD"), priorpr = 1)
+
+ecurve2 <- survfit(efit2, newdata = edummy)
+```
+
+.panel[.panel-name[Predition probabilities plot]
+```{r}
+plot(ecurve2, col=c(1,1,3,3,5,5), lty=1:2, lwd=2, xscale=365.25,
+     noplot=NULL, 
+     xlab="Years since transplant", ylab="Predicted probabilities")
+legend(700, .9, c("Currently alive in remission, no PR", "Currently in PR",
+                  "Relapse or death"), col= c(1,3,5), lwd=2, bty='n')
+text(700, .95, "Solid= No TCD, dashed = TCD", adj=0)
+```
+
+]
+]
+]
+
+???
+we will now predict the future state of a patient, using as our reference set two subjects who are 
+<= 20 years old, gender matched, AML, with and without T-cell depletion.
+we will use the fit from the proportional hazard model for the transitions to Relapse/Death and 
+a separate baseline hazard for the PR transition
 ---
 class: inverse, middle, center
 
