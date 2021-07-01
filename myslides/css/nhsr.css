@@ -88,7 +88,7 @@ pre {
   border-radius:      1px;                      /* modify rounding of corners*/
 }
 
-/*--  --*/
+/*-- code chunk foreground  --*/
 pre code {
   background:          none;
   font-size:           18px !important;
@@ -128,7 +128,7 @@ blockquote {
 
 /*-- Headings (inverse) --*/
 .inverse h1, .inverse h2, .inverse h3 {
-  color:              #FFFFFF;
+  color: #FFFFFF;
 }
 
 /*-- Horizontal bars (inverse) --*/

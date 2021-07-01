@@ -1,0 +1,30 @@
+---
+title: "test"
+author: "Kamran KHAN"
+date: "27/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```r
+if (TRUE) {
+* message("Very important!")
+}
+```
+
+```{r tidy=FALSE}
+if (TRUE) {
+{{ message("Very important!") }}
+}
+```
+
+```{r tidy=FALSE}
+library(ggplot2)
+ggplot(mtcars) +
+  aes(mpg, disp) +
+  geom_point() +   #<<
+  geom_smooth()    #<<
+```

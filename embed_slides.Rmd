@@ -1,0 +1,12 @@
+---
+title: "Untitled"
+author: "Kamran KHAN"
+date: "26/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+xaringanExtra::embed_xaringan(url = "slides.html", ratio = "16:9")
+```
+

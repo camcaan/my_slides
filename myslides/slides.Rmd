@@ -26,11 +26,18 @@ output:
 library(knitr)
 library(tidyverse)
 library(nhsrtheme)
+library(xaringanExtra)
+xaringanExtra::use_panelset()
 # set default options
 opts_chunk$set(echo = FALSE,
                fig.width = 7.252,
                fig.height = 4,
                dpi = 300)
+xaringanExtra::use_tile_view()
+use_share_again()
+xaringanExtra::style_share_again(share_buttons = c("twitter", "linkedin", "pocket"))
+
+
 # 
 # uncomment the following lines if you want to use the NHS-R theme colours by default
 # scale_fill_continuous <- partial(scale_fill_nhs, discrete = FALSE)
@@ -66,10 +73,6 @@ Often used for transitions
 
 * second point
 
-
---
-
-* third point
 
 ???
 this is for me
@@ -162,8 +165,57 @@ NHSRdatasets::LOS_model %>%
 NHSRdatasets::LOS_model %>% 
   head() #<<
 
+x <-  1 * 2 #<<
+```
+
+---
+```{r, include=FALSE}
+yt <- 0
 
 ```
+# Your turn # `r (yt <- yt + 1)`
+Try this!
+# Your turn # `r (yt <- yt + 1)` 
+Check this
+
+---
+
+Hi my name is `r rmarkdown::metadata$author`, and welcome to `r rmarkdown::metadata$title`
+---
+# Tile view 
+```{r}
+# 
+# xaringanExtra::embed_xaringan(url = "slides.html", ratio = "16:9")
+
+```
+
+---
+# This slide has panels
+#slide panels with Panelset
+.panelset[
+.panel[.panel-name[Tab 1]
+
+
+... your content goes here...
+
+
+.panel[.panel-name[Tab 2]
+
+
+...your content goes here 
+
+
+.panel[.panel-name[Tab 3]
+
+
+ ... more stuff ...
+  
+  ]
+  ]
+  ]
+  ]
+  
+---
 
 
 
