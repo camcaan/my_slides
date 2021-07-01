@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Multi-state modelling for dementia care path</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kamran Khan" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset-0.2.6/panelset.js"></script>
+    <link href="libs/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view-0.2.6/tile-view.js"></script>
+    <script src="libs/clipboard-2.0.6/clipboard.min.js"></script>
+    <link href="libs/shareon-1.4.1/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon-1.4.1/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain-0.2.6/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain-0.2.6/shareagain.js"></script>
+    <link rel="stylesheet" href="css/nhsr.css" type="text/css" />
+    <link rel="stylesheet" href="css/nhsr-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: title-slide, left, bottom
+
+# Multi-state modelling for dementia care path
+----
+## ****
+### Kamran Khan
+### 
+
+---
+class: inverse, middle, center
+
+# Aim of the study
+
+---
+class: middle
+
+# The aim is to jointly model disease progression, mortality, and their relationship with patient’s characteristics to understand the prognosis of dementia patients.
+
+---
+
+
+class: inverse, middle, center
+
+# Study Design
+
+---
+class: middle
+
+# A retrospective cohort design, describing the rates of repeated hospital admissions, transition to an institution and death and the clincal factors affecting the rates of these events.
+
+---
+
+class: inverse, middle, center
+
+# What Modelling approach and Why ?
+
+---
+class: middle, center
+
+* **A multi-state modelling approach because standard time-to-event analysis such as Cox PH only takes into account time to first event and ignore the subsequent events**.
+
+--
+
+* **Various counting process or gap time models also has the limitation of treating terminal event such as death as censored, implying that the patients are still at risk of experiencing further recurrent events.**
+
+--
+
+* **To overcome these a MSM is recommended - it models the terminal event as an absorbing state, since no recurrent events can occur after this.**
+
+
+
+???
+This model represent subsequent periods spent in and out of hospital.how the risk of death and further hospitalisation changes through time.
+
+---
+# Structure of the first model
+
+--
+
+&lt;img src="img/firstModel.png"  width="90%"&gt;
+
+??? 
+
+
+This model represent subsequent periods spent in and out of hospital. This will allow us to model how the risk of death and further hospitalisation changes through time.
+
+---
+
+
+# Structure of the second model
+
+
+&lt;img src="img/SecondModel.png"  width="90%"&gt;
+
+???
+This model concern both hospitalisations and institutionalisation and will evaluate the factors associated with transition into an institution with respect to repeated hospitalisation or death.
+---
+
+class: inverse, middle, center
+
+# Multi-state data
+
+---
+class: middle
+
+
+
+* **In ordinary survival data we have : time , status**
+
+
+--
+
+
+*  **In multi-state : time1, time2 and the status is a multi-level factor variable**
+
+
+???
+So, instead of covariates changing from line to line as in ordinary survival analysis, in MSM the status variable changes; it contains the state that was entered at time2.
+--
+
+* **We will need an identified variable to indicate which rows of the data frame belong to each subject.**
+--
+
+
+
+---
+class: center, middle
+
+```r
+survival::myeloid %&gt;% 
+head() %&gt;% 
+  knitr::kable(format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; trt &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; sex &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; futime &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; death &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; txtime &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; crtime &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; rltime &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 235 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 113 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; m &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 286 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 200 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; A &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1983 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2137 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 245 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 326 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 200 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; f &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2041 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 102 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Multi-state using `myeloid` data
+
+* `futime`, `death` - time to death or last follow-up (death)
+* `txtime` - time to  stem cell transplant (SCT)
+* `crtime` - time to complete response (CR)
+* `rltime` - time to relapse of disease (relapse)
+
+First look at a simple multi-state diagram for the myeloid data.
+
+![](Slides_2_files/figure-html/statefig2-1.png)&lt;!-- --&gt;
+
+---
+class: inverse, middle, center
+
+# Creating the data set
+
+---
+class: middle, center
+###We create the counting process dataset using the `tmerge` function###
+
+
+
+
+```r
+mdata &lt;- tmerge(myeloid[, c("id" , "trt", "sex")],
+                myeloid, id= id,
+                death = event(futime, death), cr = event(crtime))
+
+head(mdata)
+```
+
+```
+##   id trt sex tstart tstop death cr
+## 1  1   B   f      0    44     0  1
+## 2  1   B   f     44   235     1  0
+## 3  2   A   m      0   286     1  0
+## 4  3   A   f      0    38     0  1
+## 5  3   A   f     38  1983     0  0
+## 6  4   B   f      0    25     0  1
+```
+---
+class: inverse, middle, center
+
+ ## Adding a time-dependent covariate## 
+---
+
+```r
+mdata &lt;- tmerge(mdata, myeloid, id= id, priortx = tdc(txtime))
+mdata[1:7, ]
+```
+
+```
+##   id trt sex tstart tstop death cr priortx
+## 1  1   B   f      0    44     0  1       0
+## 2  1   B   f     44   235     1  0       0
+## 3  2   A   m      0   200     0  0       0
+## 4  2   A   m    200   286     1  0       1
+## 5  3   A   f      0    38     0  1       0
+## 6  3   A   f     38  1983     0  0       0
+## 7  4   B   f      0    25     0  1       0
+```
+
+```r
+summary(mdata)
+```
+
+```
+## Call:
+## tmerge(data1 = mdata, data2 = myeloid, id = id, priortx = tdc(txtime))
+## 
+##         early late gap within boundary leading trailing tied missid
+## death       0    0   0      0        0       0      646    0      0
+## cr          0    0   0    454        0       0        0    0      0
+## priortx     0    0   0    362        1       0        1    0      0
+```
+
+---
+class: inverse, middle, center
+
+ ## Create a factor for the multi-state outcome## 
+ 
+---
+
+
+```r
+mdata$event &lt;- with(mdata, factor(cr + 2*death, levels = 0:2,
+                       labels = c("none", "CR", "Death")))
+
+
+head(mdata)
+```
+
+```
+##   id trt sex tstart tstop death cr priortx event
+## 1  1   B   f      0    44     0  1       0    CR
+## 2  1   B   f     44   235     1  0       0 Death
+## 3  2   A   m      0   200     0  0       0  none
+## 4  2   A   m    200   286     1  0       1 Death
+## 5  3   A   f      0    38     0  1       0    CR
+## 6  3   A   f     38  1983     0  0       0  none
+```
+???
+If the CR time is missing, then use the death indicator and multiply it by 2 so we get a numeric value of 2 for those where dead and 0 otherwise and those that have a CR will get a value of 1.
+
+
+---
+
+
+
+---
+class: inverse, middle, center
+
+ ## Data structure for the first model## 
+ 
+---
+&lt;!-- ![](img/DataStr_ScreenShot.png) --&gt;
+
+&lt;img src="img/DataStr_ScreenShot.png"  width="90%"&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "googlecode",
+"highlightLines": true,
+"highlightLanguage": "r",
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<!--Hat-tip: https://www.garrickadenbuie.com/blog/xaringan-tip-logo-all-slides/-->
+<style>
+.logo {
+  background-image: url(img/ucl_logo_png.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 150px;
+  height: 150px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+     ':not(.inverse)' +
+     ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
