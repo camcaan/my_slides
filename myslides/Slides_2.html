@@ -39,7 +39,7 @@ class: inverse, middle, center
 ---
 class: middle
 
-# The aim is to jointly model disease progression, mortality, and their relationship with patient’s characteristics to understand the prognosis of dementia patients.
+# The aim is to jointly model and explore the mediators associated with institutionalisation, hospital readmissions and mortality, and examine the effects of dementia patients profiles on the transitions between these states.
 
 ---
 
@@ -74,28 +74,14 @@ class: middle, center
 
 
 
-???
-This model represent subsequent periods spent in and out of hospital.how the risk of death and further hospitalisation changes through time.
 
----
-# Structure of the first model
-
---
-
-&lt;img src="img/firstModel.png"  width="90%"&gt;
-
-??? 
-
-
-This model represent subsequent periods spent in and out of hospital. This will allow us to model how the risk of death and further hospitalisation changes through time.
 
 ---
 
+# Structure of the model
 
-# Structure of the second model
 
-
-&lt;img src="img/SecondModel.png"  width="90%"&gt;
+&lt;img src="img/model2.png"  width="90%"&gt;
 
 ???
 This model concern both hospitalisations and institutionalisation and will evaluate the factors associated with transition into an institution with respect to repeated hospitalisation or death.
@@ -261,7 +247,8 @@ print(edata[15:20, -(3:5)])
 ## 19 11 20-40      0    50     0     1       0
 ## 20 11 20-40     50    84     1     0       1
 ```
-
+???
+Subject 8 and 11 achieve PR, subject 9 is censored at 3.5 years(1264/365) and subject 10 dies at about 1 year. Important to note that prior PR (priorpr) lags the PR event.TDC apply from the start of a new interval and persist for all remaining intervals. Events occur at the end of an interval and only occur once.
 ---
 class: inverse, middle, center
 
@@ -269,14 +256,16 @@ class: inverse, middle, center
 
 ---
 ### Make the event variable a factor and run `survcheck()`###
-
+.pull-left[
 
 ```r
 edata$event &lt;- with(edata, factor(pstat + 2*rstat, 0:2,
                                   labels = c("censor", "PR", "RelDeath")))
 levels(edata$drmatch) &lt;- c("Match", "Mismatch")
-survcheck(Surv(tstart, tstop, event) ~ 1, data = edata, id = id)
 ```
+]
+
+.pull-right[
 
 ```
 ## Call:
@@ -300,6 +289,9 @@ survcheck(Surv(tstart, tstop, event) ~ 1, data = edata, id = id)
 ##   RelDeath 1363  841   0
 ##   (any)     577 1244 383
 ```
+]
+???
+The survcheck is very important check of the data. The transition table shows that 577 out of 2204 subjects had neither PR or failure by the end of fu while 383 experienced both. Most importantly no one goes from death to anywhere else.
 ---
 class: inverse, middle, center
 
@@ -324,12 +316,14 @@ surv1$transitions
 
 .panel[.panel-name[plot 1]
 
-![](Slides_2_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](Slides_2_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ]
 ]
 ]
-
+???
+For survival curves or "times probability is state" curves. Its a generalisation of KM.It measure how many people are in each box or state at any given time.
+The plot shows the rapid onset of PR followed by a slow but steady conversion of these patients to Relapse or Death.
 ---
 class: inverse, middle, center
 
@@ -385,12 +379,15 @@ efit1 &lt;- coxph(Surv(tstart, tstop, event) ~ dissub + age + drmatch + tcd,
 ```
 
 .panel[.panel-name[Baseline Hazard]
-![](Slides_2_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](Slides_2_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ]
 ]
 ]
 ]
+
+???
+Model without any proportionality assumption on baseline hazard.This estimate separate baseline hazard for each transition.
 ---
 class: inverse, middle, center
 
@@ -431,7 +428,9 @@ efit2 &lt;- coxph(list(Surv(tstart, tstop, event) ~ dissub + age + drmatch + tcd
 ]
 
 ???
-In this model the transition hazards into relapse or death(transitions 2 and 3) are assumed to be proportional.For this purpose tranistion 1 blong to one stratum and transition 2 and 3 belong to another stratum.the baseline hazard is shared for transition 1 to 3 and transition 2 to 3 because they transition into same sate (state 3).The fit below adds this constraint by stating that two transitions have a common intercept (1) and adding a coefficient for prior plasma recovery to the two transitions.Now every data row at risk for a 2:3 transition has priorpr = 1 and the rows for a 1:3 all have priorpr = 0
+We can assume transitions 1:3 and 2:3 to be proportional. They have a shared baseline hazard because they terminate into the same state. Here we use 1 to show these transitions have a common intercept and adding the intermediate event of PR as a tdc as priorpr.
+The priorpr value for all the data rows at risk of 2:3 transition is 1 and for 1:3 is 0.
+Pletelet recovery (priorpr) has a protective effect on relapse-free survival.
 
 ---
 class: inverse, middle, center
@@ -450,7 +449,7 @@ ecurve2 &lt;- survfit(efit2, newdata = edummy)
 ```
 
 .panel[.panel-name[Predition probabilities plot]
-![](Slides_2_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](Slides_2_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 
 ]
 ]
