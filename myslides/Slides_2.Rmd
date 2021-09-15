@@ -163,7 +163,7 @@ class: inverse, middle, center
 ---
 # Create the analysis data
 ```{r statefig2, echo=TRUE}
-
+ebmt3
 edata <- tmerge(ebmt3[, c("id", "age", "dissub", "drmatch", "tcd")],ebmt3, id = id, 
                 rstat = event(rfstime, rfsstat),
                 pstat = event(prtime, prstat),
