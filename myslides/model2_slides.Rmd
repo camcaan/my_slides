@@ -91,12 +91,14 @@ class: middle, center
 --
 
 * **Various counting process or gap time models also has the limitation of treating terminal event such as death as censored, implying that the patients are still at risk of experiencing further recurrent events.**
-
+???
+repeated events can be modelled using Poisson models which estimate the rate of events by simply modelling total number of each event. To take time into consideration as well, then various counting process such as AG and prentice, willias and petrson (PWP), but these methds considers death as a censoring event.
 --
 
 * **To overcome these a MSM is recommended - it models the terminal event as an absorbing state, since no recurrent events can occur after this.**
 
-
+???
+the basic assumption of conventional survival analysis is that censoring distribution and event time distribution are independent.This means that individuals who are censored can be represented by those who remain under observation(subjects who are censored have the same survival distribution as those who are not censored).Treating a competing risk as censoring can violate the assumption of non-informative censoring. Individuals who experience the competing event may have a different prognosis for the event of interest compared to those who were neither censored nor experienced the event.
 
 
 
@@ -145,14 +147,14 @@ class: inverse, middle, center
 .panelset[
 
 .panel[.panel-name[Data]
-.pull-left[<img src="img/dat1.png"  width="100%" >]
+<img src="img/dat1.png"  height="80%"  width = "100%">
 .pull-right[
 * **For example if this is the data for an example patient with time of admission, discharge and death .**
 ]
 
 
 .panel[.panel-name[Counting process data]
-.pull-left[<img src="img/data2.png"  width="100%">]
+ <img src="img/data2.png"  width="150%">
 
 .pull-right[
 
@@ -161,7 +163,6 @@ class: inverse, middle, center
 
 
 
-* **Using `tmerge` function, we can create a counting process data structure where each row correspond to an event such as hospitalisation, discharge, institutionalisation etc.**
 
 
 ]
@@ -198,8 +199,9 @@ class: inverse, middle, center
 
 * **Admission due to injury (Y/N)**
 
+* **Time since Index hospital admission (First admission after dementia diagnosis): 1 year, 2-4, 4+ **
 
-* **Length of stay and admission due to injury were used as time-varying covariates**.
+* **Length of stay, admission due to injury and time since first admission were used as time-varying covariates**.
 
 ---
 
@@ -245,22 +247,22 @@ class: inverse, middle, center
 # Results
 ---
 ###Hospital to institutionalisation (State 2 --> State 3)
-<img src="img/2_3.png"  width="50%">
+<img src="img/2-3.png"  width="50%">
 
 ---
 ###Hospital discharge (Hospital -->  Out) State 2 --> State 4
-<img src="img/hosp_out.png"  width="50%">
+<img src="img/2-4.png"  width="50%">
 
 ---
 
 ###Hospital readmission: State 4 --> State 2
-<img src="img/4_2.png"  width="50%">
+<img src="img/4-2.png"  width="50%">
 
 ---
 
 
 ###Death inside hospital: State 2 --> State 5
-<img src="img/2_5.png"  width="50%">
+<img src="img/2-5.png"  width="50%">
 
 ---
 class: inverse, middle, center
@@ -296,30 +298,30 @@ class: inverse, middle, center
 ]
 
 .panel[.panel-name[Injury adm + Long stay]
-.pull-left[<img src="img/insti_inj_ls.png"  width="100%">]
-.pull-right[
+ <img src="img/insti_inj_ls.png"  width="40%">
+
 * **With Long stay admission and also admission due to injury, the probability of being institutionalised increases from 10% to more than 30%**
 
 ]
 ]
 
 ]
-]
+
 ---
-.pull-left[<img src="img/marital.png"  width="100%">]
+<img src="img/marital.png"  width="60%">
 .pull-right[
 * **Probability of being institutionalised for dementia patients who were widowed/separated were higher compared to married patients especially in the first 4-5 years after diagnosis **
 
 ]
 ---
 
-.pull-left[<img src="img/insti_subtypes.png"  width="110%">]
-.pull-right[
+<img src="img/insti_subtypes.png"  width="70%">
+
 * **Patients with Vascular dementia were admitted to an institution early compared to Alzheimer’s and unspecified dementia patients, they had a shorter life expectancy due to their transition to death **
 
-]
+
 ---
-.pull-left[<img src="img/insti_frailty.png"  width="110%">]
+<img src="img/insti_frailty.png"  width="110%">
 .pull-right[
 
 
@@ -374,6 +376,11 @@ class: inverse, middle, center
 <img src="img/bar_ls.png"  width="65%">
 ---
 
+
+<img src="img/timebefore.jpg"  width="100%">
+
+* **Median admission stay before discharge to institution was higher but this decreased by almost 60% for subsequent hospital stay**
+---
 #Summary
 
 * **Male dementia patients were at greater risk of hospital readmission,  and death**
@@ -390,5 +397,6 @@ class: inverse, middle, center
 
 * **Admission due to injury and long hospital stays increased the risk of institutionalisation and death**
 
+* **Longer the time since first admission after dementia diagnosis, increased hazard of institutionalisation, death inside hospital and decreased readmission rate**.
 
-          **************************************************************************
+         
