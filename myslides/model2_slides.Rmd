@@ -377,7 +377,7 @@ class: inverse, middle, center
 ---
 
 
-<img src="img/timebefore.jpg"  width="100%">
+<img src="img/timebefore.jpg" width="100%">
 
 * **Median admission stay before discharge to institution was higher but this decreased by almost 60% for subsequent hospital stay**
 ---
