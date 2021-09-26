@@ -179,7 +179,7 @@ class: inverse, middle, center
 
 
 ---
-##Covariates used 
+###Covariates used 
 
 * **Sex**
 
