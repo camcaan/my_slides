@@ -352,7 +352,7 @@ class: inverse, middle, center
 
 
 ---
-<img src="img/frailty.png"  width="55%">
+<img src="img/insti_frail.png"  width="55%">
 .pull-up[The state occupation probability starting at age
 70 shows that more patients with severe frailty are in
 institution between the ages of 70-76.]
