@@ -81,7 +81,7 @@ class: middle
 
 class: inverse, middle, center
 
-# What Modelling approach and Why ?
+## What Modelling approach and Why ?
 
 ---
 class: middle, center
@@ -126,7 +126,7 @@ class: middle, center
 
 ---
 ### Structure of the model
-<img src="img/Model2.png"  width="55%">
+<img src="img/Model_str.png"  width="55%">
 
 *Note:  Here institutionalisation means everything that happens once a patient is discharged to an institution from hospital and Out include everything that happens to a patient once discharged from hospital.*
 ???
