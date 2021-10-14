@@ -80,13 +80,32 @@ the basic assumption of conventional survival analysis is that censoring distrib
 
 
 ---
+class: inverse, middle, center
 
-# Structure of the model
+# Questions from Multi-state model
+
+---
+class: middle, center
+ **The questions that we can answer using a MSM are simply extensions of what we ask with classical survival analysis**
+ **What is the probability of being in a state at time t? **
+ - What is the probability of being in a state at 5 years?
+  
+ **How long does it take to reach a state?**
+  - What is the median length of time to one state until moving to the next state?
+  
+ **How long does someone remain in a state? **
+  - How long on average do patient stay in a certain state during the first 5 years of a study?
+  
+ **What is the risk of moving to a state (arrows)?**
+  - What risk factors increase your risk of moving from one state to the next?
 
 
-&lt;img src="img/model2.png"  width="45%"&gt;
 
-* **Note: No data on patients going out of institution (Institutionalisation to out) or entering institution once they are discharged from hospital (Out to Institutionalisation). Therefore, Institutionalisation may include post-institutionalisation stay and similarly, "Out" could include pre-institutionalisation stay. So, here institutionalisation means everything that happens once a patient is discharged to an institution from hospital and Out may include everything that happens to a patient once discharged from hospital.**
+---
+### Structure of the model
+&lt;img src="img/Model2.png"  width="55%"&gt;
+
+*Note:  Here institutionalisation means everything that happens once a patient is discharged to an institution from hospital and Out include everything that happens to a patient once discharged from hospital.*
 ???
 This model concern both hospitalisations and institutionalisation and will evaluate the factors associated with transition into an institution with respect to repeated hospitalisation or death.
 ---
@@ -154,6 +173,8 @@ class: inverse, middle, center
 
 &lt;img src="img/Flowchart.png"  width="45%"&gt;
 
+???
+we are mainly focusing on institutionalisation from hospital ,i.e. patients admitted to hospital from private household and then being discharged to care institution after hospital admission.This will lead to a better understanding of the institutionalisation of dementia patients.
 
 
 ---
@@ -252,18 +273,27 @@ class: inverse, middle, center
 
 .panelset[
 
-.panel[.panel-name[Age scale]
-.pull-left[&lt;img src="img/mf_inti_age.png"  width="100%"&gt;]
-.pull-right[
-* **Probability in state curves indicate the probability of being in a state by time.**
-* **More women are discharged into an institution. Also, men are transitioned quickly to death or readmitted to hospital, as they spend less time inside institution**]
-
 .panel[.panel-name[Time since diagnosis]
-.pull-left[&lt;img src="img/mf_insti_time.png"  width="100%"&gt;]
+&lt;img src="img/MF_ALL_STATES_AALEN.png"  width="90%"&gt;
+
+
+
+
+
+.panel[.panel-name[Age scale]
+&lt;img src="img/mf_aalen_agescale.png"  width="65%"&gt;
+
 ]
 
 ]
 ]
+
+---
+#### Probability in states for patients with Long hospital stays (&gt;= 12 days)
+&lt;img src="img/Lonstay_3_states.png"  width="55%"&gt;
+
+
+
 
 ---
 .panelset[
@@ -271,8 +301,8 @@ class: inverse, middle, center
 .panel[.panel-name[Injury Admission]
 .pull-left[&lt;img src="img/insti_inj.png"  width="100%"&gt;]
 .pull-right[
-* **Probability of institutionalizatin increases with long stay hospital admissions.**
-* **People with long stay admission also transition quckly to death.**
+* **Probability of institutionalization increases with long stay hospital admissions.**
+* **People with long stay admission also transition quickly to death.**
 ]
 
 .panel[.panel-name[Injury adm + Long stay]
@@ -299,16 +329,11 @@ class: inverse, middle, center
 
 
 ---
-&lt;img src="img/insti_frailty.png"  width="110%"&gt;
-.pull-right[
+&lt;img src="img/frailty.png"  width="55%"&gt;
+.pull-up[The state occupation probability starting at age
+70 shows that more patients with severe frailty are in
+institution between the ages of 70-76.]
 
-
-
-
-]
-
-
-* **The state occupation probability starting at age 70 shows that more patients with severe frailty are in institution between the ages of 70-76. **
 ---
 class: inverse, middle, center
 
@@ -323,16 +348,16 @@ class:  middle, center
 * **Similar to in ordinary Cox model for example, with age and sex covariates,and we want to predict a survival curve, we have to provide values for a particular age and sex.**
 ---
 
-.pull-left[&lt;img src="img/insti_mf_ls.png"  width="100%"&gt;]
-.pull-right[
+.pull-left[&lt;img src="img/predicted_insti.png"  width="100%"&gt;]
+
+.pull-right[&lt;img src="img/predicted_death.png"  width="100%"&gt;]
 
 
 
 
-]
 
 
-* **The predicted effect of hospital long-stay admissions is to increase the occupancy of institutionalisation state for both men and women, especially in the first 2-5 years after dementia diagnosis**
+
 ---
 class: inverse, middle, center
 
@@ -344,14 +369,10 @@ class: inverse, middle, center
 &lt;img src="img/BARPLOT_MF.png"  width="85%"&gt;
 ---
 
-###RMST for Male/Female dementia patients with and without injury admission
 
-&lt;img src="img/bar_inj.png"  width="85%"&gt;
----
+#### RMST for Male/Female dementia patients with and without long-stay admission
 
-###RMST for Male/Female dementia patients with and without long-stay admission
-
-&lt;img src="img/bar_ls.png"  width="65%"&gt;
+&lt;img src="img/insti_bar_tableau.jpg"  width="85%"&gt;
 ---
 
 
