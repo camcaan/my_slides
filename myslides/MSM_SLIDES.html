@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Multi-state modelling for dementia care path</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kamran Khan" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset-0.2.6/panelset.js"></script>
+    <link href="libs/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view-0.2.6/tile-view.js"></script>
+    <script src="libs/clipboard-2.0.6/clipboard.min.js"></script>
+    <link href="libs/shareon-1.4.1/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon-1.4.1/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain-0.2.6/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain-0.2.6/shareagain.js"></script>
+    <link rel="stylesheet" href="css/nhsr.css" type="text/css" />
+    <link rel="stylesheet" href="css/nhsr-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: title-slide, left, bottom
+
+# Multi-state modelling for dementia care path
+----
+## ****
+### Kamran Khan
+### 
+
+---
+class: inverse, middle, center
+
+# Aim of the study
+
+---
+class: middle
+
+# The aim is to jointly model and explore the factors associated with institutionalisation directly from hospital, and estimate the association of different covariates with the rate of institutionalisation , length of stay in hospital and time to institutionalisation and death from dementia diagnosis.
+
+---
+
+
+class: inverse, middle, center
+
+# Study Design
+
+---
+class: middle
+
+# A retrospective cohort design, describing the rates of hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
+
+---
+
+## Structure of the model
+
+&lt;img src="img/pics_NEW/statesfig_new.png"  width="55%"&gt;
+
+
+???
+This model concern both hospitalisations and institutionalisation and will evaluate the factors associated with transition into an institution with respect to repeated hospitalisation or death.
+---
+
+
+
+---
+###Covariates used 
+
+* **Sex**
+
+* **Age (&lt;75, 75-85, 85+)**
+
+* **Homecare availability **
+
+* **Dementia subtypes (Alzheimer's dementia, rare dementia, Vascular dementia &amp; Unspecified)**
+
+* **Exposure to anti-diabetic drugs a year before dementia diagnosis**
+
+* **Exposure to anti-cardiovascular drugs one year before dementia diagnosis**
+
+* **Frailty Index scores (Fit, Mild frailty, Moderate frailty, Severe frailty)**
+
+* **Charlson comorbidity Index (CCI): CCI = 0, CCI 1-2, CCI 3-4,and CCI  =&gt; 5**
+
+* **Index of multiple deprivation (IMD)**
+
+* **Length of hospital stay : &gt;= 12 days (Y/N)**
+
+* **Admission due to injury (Y/N)**
+
+*  **30 days readmission **
+
+* **30 day readmission, Length of stay, admission due to injury, Charlson score (CCI), and frailty score (eFI), were used as time-varying covariates**.
+
+
+---
+
+class: inverse, middle, center
+
+# Results
+
+---
+&lt;img src="img/Pics_New/HR_ALL.JPG" width = "1000" height = "620"&gt;
+---
+
+
+class: inverse, middle, center
+
+# State occupation probabilities
+ ## Aalen-Johansen P(t) curves## 
+
+---
+
+* *With homecare availability the chance of being institutionalised or dead are lowered*
+
+.pull-left[&lt;img src="img/Pics_NEW/HC_Insti_aalen.png"  width="95%"&gt;]
+
+.pull-right[&lt;img src="img/Pics_NEW/HC_death_aalen.png"  width="90%"&gt;]
+
+---
+
+
+&lt;img src="img/Pics_NEW/HC_CVD_Death_new.png"  width="600" height = "500"&gt;
+
+* **The availability of home care to dementia patients with CVD complications give them the rate of those with no CVD complications **
+
+
+---
+
+&lt;img src="img/Pics_NEW/insti_subtypes_aalen.png"  width="600" height = "500"&gt;
+
+* **Patients with Vascular dementia were admitted to an institution early compared to Alzheimer’s and unspecified dementia patients, they had a shorter life expectancy due to their transition to death **
+
+
+---
+&lt;img src="img/Pics_NEW/frailty_insti_aalen.png"  width="55%"&gt;
+
+With increasing frailty the probability of being in an institution decreases because of their high rate of mortality with increasing frailty.
+
+
+---
+
+
+* Dementia patients who had hospital admissions due to an injury transition to isntitution very quickly and their probability of death is also higher.
+
+.pull-left[&lt;img src="img/Pics_NEW/injury_insti_aalen.png"  width="90%"&gt;]
+
+.pull-right[&lt;img src="img/Pics_NEW/injury_death_aalen.png"  width="90%"&gt;]
+
+---
+
+
+* Dementia patients who had hospital admissions due to an injury transition to isntitution very quickly and their probability of death is also higher.
+
+.pull-left[&lt;img src="img/Pics_NEW/injury_insti_aalen.png"  width="90%"&gt;]
+
+.pull-right[&lt;img src="img/Pics_NEW/injury_death_aalen.png"  width="90%"&gt;]
+
+---
+
+
+
+* Hospital readmission within 30 days from the previous discharge were at higher probability to be institutionalised during the first two years after dementia diagnosis after which the probability of being in institution decreases drastically due to their higher mortality rate.
+
+&lt;img src="img/Pics_NEW/ThirtyDayReadm.png"  width = "85%"&gt;
+
+
+---
+class: inverse, middle, center
+
+# Predicted time in state curves
+ ##Predicted survival curves## 
+---
+class:  middle, center
+* **For predicted survival curves, we use the same `survfit()` call as Aalen-Johansen**
+
+
+
+
+---
+&lt;img src="img/Pics_NEW/Predicted_75_84.png"  width = "55%"&gt;
+
+* Aalen-Johansen curves post Cox model (Cumulative hazard curves) : Predicted probability in state curves 
+
+
+
+
+---
+
+&lt;img src="img/Pics_NEW/85andover_HC_aLLsTATES.png"  width = "55%"&gt;
+
+
+
+
+
+
+---
+class: inverse, middle, center
+
+# Sojourn times
+ ##Restricted mean survival time (RMST)## 
+---
+###Restricted mean survival time for Male/Female dementia patients
+
+&lt;img src="img/Pics_NEW/barplot_mf.png"  width="85%"&gt;
+---
+
+
+#### RMST for patients with and without homecare availability and whether suffering from CVD complications or not
+
+&lt;img src="img/Pics_NEW/barplot_HC_CVD.png" width="85%"&gt;
+---
+
+
+#Summary
+
+* **Male dementia patients were at greater risk of hospital readmission,  and death**
+
+* **Increasing age was associated with institutional discharge directly from hospital and death **
+
+* **Female dementia patients were more likely to be institutionalised compared to men**
+
+* **AD and VaD were associated with institutionalisation**
+
+* **Patients with home care availability were spending less time in hospital, were less likley to be discharged to institution and their hazard of death was significantly lower as well.**
+
+* **Patient who were also on anti-cardiovascular drugs had a greater risk of dying inside hospital as well as in institutional care**
+
+* **Hospital readmissions increased with increasing frailty and increased comorbidity burden**
+
+* **Increased hazard of Institutionalisation was also associated  increasing frailty**
+
+* **Higher socio-economic deprivation was associated with  increased rate of hospital readmission, institutionalisation and death inside hospital**
+
+* **Admission due to injury and long hospital stays increased the risk of institutionalisation and death**
+
+
+
+         
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "googlecode",
+"highlightLines": true,
+"highlightLanguage": "r",
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<!--Hat-tip: https://www.garrickadenbuie.com/blog/xaringan-tip-logo-all-slides/-->
+<style>
+.logo {
+  background-image: url(img/ucl_logo_png.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 150px;
+  height: 150px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+     ':not(.inverse)' +
+     ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
