@@ -1,6 +1,33 @@
 
 library(tidyr)
 library(survival)
+library(dplyr)
+
+
+states <- c("Out", "Hospital", "Institution", "Death")
+
+connect <- matrix(0, nrow = 4, ncol = 4, dimnames=list(states, states))
+
+connect[1,2:4] <- 1
+connect[2,c(1,3:4)] <- 1
+connect[3,c(1,2:4)] <- 1
+statefig(c(1,2,1), connect)
+
+
+
+states <- c( "Hospital", "Out"  ,"Institution", "Death")
+
+connect <- matrix(0, nrow = 4, ncol = 4, dimnames=list(states, states))
+
+connect[1,2:4] <- 1
+connect[2,c(1,3:4)] <- 1
+connect[3,c(1,2:4)] <- 1
+statefig(c(1,2,1), connect)
+
+
+
+
+
 df <- read.csv(file = "example_df.csv")
 myformat <- "%d/%m/%Y"
 
