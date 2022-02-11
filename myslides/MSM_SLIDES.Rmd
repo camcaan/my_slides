@@ -201,23 +201,15 @@ class:  middle, center
 * **For predicted survival curves, we use the same `survfit()` call as Aalen-Johansen**
 
 
-
-
 ---
 <img src="img/Pics_NEW/Predicted_75_84.png"  width = "55%">
 
 * Aalen-Johansen curves post Cox model (Cumulative hazard curves) : Predicted probability in state curves 
 
 
-
-
 ---
 
 <img src="img/Pics_NEW/85andover_HC_aLLsTATES.png"  width = "55%">
-
-
-
-
 
 
 ---
