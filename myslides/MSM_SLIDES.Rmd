@@ -130,14 +130,6 @@ class: inverse, middle, center
 <img src="img/HR_ALL.png"  width ="90%" >
 
 
-
-
-
-
-
-
-
-
 ---
 
 
