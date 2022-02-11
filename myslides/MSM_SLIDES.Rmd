@@ -127,7 +127,7 @@ class: inverse, middle, center
 
 ---
 
-<img src="img/Pics_New/HR_ALL.png"  width ="90%" >
+<img src="img/HR_ALL.png"  width ="90%" >
 
 
 
