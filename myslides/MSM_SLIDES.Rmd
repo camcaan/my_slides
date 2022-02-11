@@ -83,7 +83,7 @@ class: middle
 
 ## Structure of the model
 
-<img src="img/pics_NEW/statesfig_new.png"  width="55%">
+<img src="img/Pics_NEW/statesfig_new.png"  width="55%">
 
 
 ???
