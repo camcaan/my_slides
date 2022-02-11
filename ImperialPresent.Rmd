@@ -1,0 +1,489 @@
+---
+title: "COVID 19 data visualisation"
+# subtitle: ""
+author: "Kamran Khan"
+institute: "Institute of Health Informatics"
+date: ""
+output:
+  xaringan::moon_reader:
+    css:
+      - default
+      - css/nhsr.css
+      - css/nhsr-fonts.css
+    lib_dir: libs   #creates directory for libraries
+    seal: false      # false : custom title slide
+    nature:
+      highlightStyle: googlecode   #highlighting syntax for code 
+      highlightLines: true         # true: enables code line highlighting
+      highlightLanguage: ["r"]     # language to highlight
+      countIncrementalSlides: false  # false: disables counting of incremental slides
+      ratio: "16:9"                  # 4:3 for standard size
+    includes:
+      after_body: myslides/css/insert-logo.html   # add logo
+---
+
+```{r , include = FALSE}
+library(knitr)
+library(tidyverse)
+library(nhsrtheme)
+library(xaringanExtra)
+library(survival)
+xaringanExtra::use_panelset()
+# set default options
+opts_chunk$set(echo = FALSE,
+               fig.width = 7.52,
+               fig.height = 4,
+               dpi = 300)
+xaringanExtra::use_tile_view()
+# use_share_again()
+# xaringanExtra::style_share_again(share_buttons = c("twitter", "linkedin", "pocket"))
+
+
+
+# uncomment the following lines if you want to use the NHS-R theme colours by default
+scale_fill_continuous <- partial(scale_fill_nhs, discrete = FALSE)
+scale_fill_discrete <- partial(scale_fill_nhs, discrete = TRUE)
+scale_colour_continuous <- partial(scale_colour_nhs, discrete = FALSE)
+scale_colour_discrete <- partial(scale_colour_nhs, discrete = TRUE)
+```
+
+class: title-slide, left, bottom
+
+# `r rmarkdown::metadata$title`
+----
+## **`r rmarkdown::metadata$subtitle`**
+### `r rmarkdown::metadata$author`
+### `r rmarkdown::metadata$date`
+
+---
+class: inverse, middle, center
+
+# COVID 19 cases and vaccinations in the UK
+
+---
+
+
+# This next slide shows visualisation using the dataset published by Our World in Data, and gives an overview of Covid and vaccination trends in the UK.
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      autodep = TRUE, fig.retina = 2,	dpi = 140,
+                      fig.width = 7.5, fig.height = 4)
+
+options(scipen = 999)
+library(tidyverse)
+library(plotly)
+library(zoo)
+library(lubridate)
+library(sf)
+library(rnaturalearth)
+
+UK <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv") %>%
+  filter(location == "United Kingdom") %>%
+  drop_na(new_cases_smoothed) %>%
+  select(where(~!all(is.na(.x)))) # Drop columns that contain all NA values
+```
+
+```{r}
+cvv <- ggplot(UK, aes(x = date)) +
+  geom_point(aes(y = new_cases, color = "Cases"), size = 0.75, shape = 21) +
+  geom_point(aes(y = new_vaccinations, color = "Vaccinations"), size = 0.75, shape = 21) +
+  geom_line(aes(y = new_cases_smoothed, color = "Cases(trend)"), size = 1) +
+  geom_line(aes(y = new_vaccinations_smoothed, color = "Vaccinations(trend)"), size = 1) +
+  theme_classic() +
+  scale_color_manual(values = c("Cases(trend)" = "darkblue", "Vaccinations(trend)" = "palegreen4",
+                                "Cases" = "skyblue1", "Vaccinations" = "darkseagreen")) +
+  guides(color = guide_legend(override.aes = list(linetype = c("Cases(trend)" = 1,
+                                                               "Vaccinations(trend)" = 1,
+                                                               "Cases" = 0,
+                                                               "Vaccinations" = 0),
+                                                  shape = c("Cases(trend)" = NA,
+                                                            "Vaccinations(trend)" = NA,
+                                                            "Cases" = 21,
+                                                            "Vaccinations" = 21)))) +
+  labs(title = "Covid-19 daily cases and vaccinations in the UK",
+       x = "Date",
+       y = "Daily cases & vaccinations (log10 scale)",
+       color = NULL, caption = "Data: OWID") +
+  scale_x_date(date_breaks = "4 month") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom") +
+  scale_y_continuous(trans="log10")
+ggplotly(cvv) %>%
+  layout(hovermode = "x", legend = list(orientation = "h", xanchor = "center", x = 0.5, y = -0.1))
+```
+
+
+---
+class: middle
+
+# A retrospective cohort design, describing the rates of hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
+
+---
+
+class: inverse, middle, center
+
+## What Modelling approach and Why ?
+
+---
+class: middle, center
+
+* **A multi-state modelling approach because standard time-to-event analysis such as Cox PH only takes into account time to first event and ignore the subsequent events**.
+
+--
+
+* **Various counting process or gap time models also has the limitation of treating terminal event such as death as censored, implying that the patients are still at risk of experiencing further recurrent events.**
+???
+repeated events can be modelled using Poisson models which estimate the rate of events by simply modelling total number of each event. To take time into consideration as well, then various counting process such as AG and prentice, willias and petrson (PWP), but these methds considers death as a censoring event.
+--
+
+* **To overcome these a MSM is recommended - it models the terminal event as an absorbing state, since no recurrent events can occur after this.**
+
+???
+the basic assumption of conventional survival analysis is that censoring distribution and event time distribution are independent.This means that individuals who are censored can be represented by those who remain under observation(subjects who are censored have the same survival distribution as those who are not censored).Treating a competing risk as censoring can violate the assumption of non-informative censoring. Individuals who experience the competing event may have a different prognosis for the event of interest compared to those who were neither censored nor experienced the event.
+
+
+
+---
+class: inverse, middle, center
+
+# Questions from Multi-state model
+
+---
+class: middle, center
+
+ 
+ **What is the probability of being in a state at time t? **
+ 
+  - What is the probability of being in a state at 5 years?
+  
+ **How long does it take to reach a state?**
+  - What is the median length of time to one state until moving to the next state?
+  
+ **How long does someone remain in a state? **
+  - How long on average do patient stay in a certain state during the first 5 years of a study?
+  
+ **What is the risk of moving to a state (arrows)?**
+  - What risk factors increase your risk of moving from one state to the next?
+
+???
+ The questions that we can answer using a MSM are simply extensions of what we ask with classical survival analysis
+
+---
+### Structure of the model
+
+<img src="img/model_str.png"  width="55%">
+
+
+*Note:  Here institutionalisation means everything that happens once a patient is discharged to an institution from hospital and Out include everything that happens to a patient once discharged from hospital.*
+???
+This model concern both hospitalisations and institutionalisation and will evaluate the factors associated with transition into an institution with respect to repeated hospitalisation or death.
+---
+
+class: inverse, middle, center
+
+# Multi-state data
+
+---
+class: middle
+
+
+
+* **In ordinary survival data we have : time , status**
+
+
+--
+
+
+*  **In multi-state : time1, time2 and the status is a multi-level factor variable**
+
+
+???
+So, instead of covariates changing from line to line as in ordinary survival analysis, in MSM the status variable changes; it contains the state that was entered at time2.
+--
+
+* **We will need an id variable to indicate which rows of the data frame belong to each subject.**
+--
+---
+class: inverse, middle, center
+
+# Data structure
+
+---
+
+.panelset[
+
+.panel[.panel-name[Data]
+<img src="img/dat1.png"  height="80%"  width = "100%">
+.pull-right[
+* **For example if this is the data for an example patient with time of admission, discharge and death .**
+]
+
+
+.panel[.panel-name[Counting process data]
+ <img src="img/data2.png"  width="150%">
+
+.pull-right[
+
+]
+
+
+
+
+
+
+]
+
+]
+]
+
+---
+### Study cohort selection
+
+
+<img src="img/Pics_New/selection.png"  width="45%">
+
+???
+we are mainly focusing on institutionalisation from hospital ,i.e. patients admitted to hospital from private household and then being discharged to care institution after hospital admission.This will lead to a better understanding of the institutionalisation of dementia patients.
+
+
+---
+###Covariates used 
+
+* **Sex**
+
+* **Dementia subtypes (Alzheimer's dementia, Vascular dementia & Unspecified/rare dementia)**
+
+* **Exposure to anti-diabetic drugs a year before dementia diagnosis**
+
+* **Exposure to anti-cardiovascular drugs one year before dementia diagnosis**
+
+* **Frailty Index scores (Fit, Mild frailty, Moderate frailty, Severe frailty)**
+
+* **Charlson comorbidity Index (CCI): CCI < 2, =2 and >2**
+
+* **Index of multiple deprivation (IMD)**
+
+* **Length of hospital stay : >= 12 days (Y/N)**
+
+* **Admission due to injury (Y/N)**
+
+* **Time since Index hospital admission (First admission after dementia diagnosis): 1 year, 2-4, 4+ **
+
+* **Length of stay, admission due to injury, Charlson score (CCI), frailty score (eFI), and time since first admission were used as time-varying covariates**.
+
+---
+
+##Outcomes 
+
+
+
+
+ **The outcomes of interest were**
+ 
+ 
+ 
+ 
+ * **All-cause hospitalisations**
+ 
+ * **Institutionalisation**
+ 
+ * **All-cause death**
+
+
+---
+
+###Statistical analysis 
+
+
+
+* **Multi-state Cox model using R survival library**
+
+* **To investigate the covariates effect on each specific transition between two states**
+
+* **Each transition in the MSM is a Cox type regression model**
+
+* **We get the hazard ratios (HR) for each covariate effect on different transitions**
+
+* **We also can estimate the probabilities of people in a particular state at a particular time**
+
+* **Also, the time spent in each state by patients with specific profiles. Which is the sojourn time or the restricted mean survival time (RMST)**
+
+---
+
+class: inverse, middle, center
+
+# Results
+---
+####Hospital to institutionalisation (State 2 --> State 3)
+<img src="img/Pics_New/hr_2_3.png"  width="50%">
+
+
+---
+####Institution to Hospital (State 3 --> State 2)
+<img src="img/Pics_New/hr_3_2.png"  width="50%">
+
+---
+####Hospital discharge (Hospital -->  Out) State 2 --> State 4
+<img src="img/Pics_New/hr_2_4.png"  width="50%">
+
+---
+
+#### Rehospitalisation from outside Institution : State 4 --> State 2
+<img src="img/Pics_New/hr_4_2.png"  width="50%">
+
+---
+
+
+####Death inside hospital: State 2 --> State 5
+<img src="img/Pics_New/hr_2_5.png"  width="50%">
+
+---
+
+
+####Death inside Institution: State 3 --> State 5
+<img src="img/Pics_New/hr_3_5.png"  width="50%">
+
+---
+
+
+####Death outside Hospital/Institution: State 4 --> State 5
+<img src="img/Pics_New/hr_4_5.png"  width="50%">
+
+---
+class: inverse, middle, center
+
+# State occupation probabilities
+ ## Aalen-Johansen P(t) curves## 
+---
+
+
+.panelset[
+
+.panel[.panel-name[Time since diagnosis]
+<img src="img/MF_ALL_STATES_AALEN.png"  width="90%">
+
+
+
+
+
+.panel[.panel-name[Age scale]
+<img src="img/mf_aalen_agescale.png"  width="65%">
+
+]
+
+]
+]
+
+---
+#### Probability in states for patients with Long hospital stays (>= 12 days)
+<img src="img/Lonstay_3_states.png"  width="55%">
+
+
+
+
+---
+.panelset[
+
+.panel[.panel-name[Injury Admission]
+.pull-left[<img src="img/insti_inj.png"  width="100%">]
+.pull-right[
+* **Probability of institutionalization increases with long stay hospital admissions.**
+* **People with long stay admission also transition quickly to death.**
+]
+
+.panel[.panel-name[Injury adm + Long stay]
+ <img src="img/insti_inj_ls.png"  width="40%">
+
+* **With Long stay admission and also admission due to injury, the probability of being institutionalised increases from 10% to more than 30%**
+
+]
+]
+
+]
+
+---
+<img src="img/marital.png"  width="60%">
+.pull-right[
+* **Probability of being institutionalised for dementia patients who were widowed/separated were higher compared to married patients especially in the first 4-5 years after diagnosis **
+
+]
+---
+
+<img src="img/insti_subtypes.png"  width="70%">
+
+* **Patients with Vascular dementia were admitted to an institution early compared to Alzheimer’s and unspecified dementia patients, they had a shorter life expectancy due to their transition to death **
+
+
+---
+<img src="img/insti_frail.png"  width="55%">
+.pull-up[The state occupation probability starting at age
+70 shows that more patients with severe frailty are in
+institution between the ages of 70-76.]
+
+---
+class: inverse, middle, center
+
+# Predicted time in state curves
+ ##Predicted survival curves## 
+---
+class:  middle, center
+* **For predicted survival curves, we use the same `survfit()` call as Aalen-Johansen**
+
+* **However, we need a target value of x**
+
+
+---
+
+.pull-left[<img src="img/predicted_insti.png"  width="100%">]
+
+.pull-right[<img src="img/predicted_death.png"  width="100%">]
+
+
+* Curves using the original data and prediction from the Cox model match quite well.
+
+
+
+
+---
+class: inverse, middle, center
+
+# Sojourn times
+ ##Restricted mean survival time (RMST)## 
+---
+###Restricted mean survival time for Male/Female dementia patients
+
+<img src="img/BARPLOT_MF.png"  width="85%">
+---
+
+
+#### RMST for Male/Female dementia patients with and without long-stay admission
+
+<img src="img/insti_bar_tableau.jpg"  width="85%">
+---
+
+
+<img src="img/timebefore.jpg" width="100%">
+
+* **Median admission stay before discharge to institution was higher but this decreased by almost 60% for subsequent hospital stay**
+---
+#Summary
+
+* **Male dementia patients were at greater risk of hospital readmission,  and death**
+
+* **Female dementia patients were more likely to be institutionalised compared to men**
+
+* **Patient who were also on anti-cardiovascular drugs had a greater risk of dying inside hospital as well as in institutional care**
+
+* **Hospital readmissions increased with increasing frailty and increased comorbidity burden**
+
+* **Institutionalisation decreased with increasing frailty and increasing comorbidity score**
+
+* **With increased socio-economic deprivation, hospital readmission also increased**
+
+* **Admission due to injury and long hospital stays increased the risk of institutionalisation and death**
+
+* **Longer the time since first admission after dementia diagnosis, increased hazard of institutionalisation, death inside hospital and decreased readmission rate**.
+
+         
