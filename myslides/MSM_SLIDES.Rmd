@@ -132,7 +132,7 @@ class: inverse, middle, center
 
 ---
 
-<img src="img/Pics_NEW/diagnosesAndCausesDeathsjpg.jpg"  width="95%">
+<img src="img/diagnosesAndCausesDeathsjpg.jpg"  width="95%">
 
 ---
 class: inverse, middle, center
