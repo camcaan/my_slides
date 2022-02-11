@@ -126,7 +126,18 @@ class: inverse, middle, center
 # Results
 
 ---
+
 <img src="img/Pics_New/HR_ALL.png"  width ="90%" >
+
+
+
+
+
+
+
+
+
+
 ---
 
 
