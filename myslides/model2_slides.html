@@ -4,7 +4,7 @@
     <title>Multi-state modelling for dementia care path</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kamran Khan" />
-    <script src="libs/header-attrs-2.9/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
     <script src="libs/panelset-0.2.6/panelset.js"></script>
@@ -40,7 +40,7 @@ class: inverse, middle, center
 ---
 class: middle
 
-# The aim is to jointly model and explore the mediators associated with institutionalisation, hospital readmissions and mortality, and examine the effects of dementia patients profiles on the transitions between different states.
+# The aim is to jointly model and explore the mediators associated with institutionalisation, hospitalisations and mortality, and examine the effects of dementia patients profiles on the transitions between different states.
 
 ---
 
@@ -52,7 +52,7 @@ class: inverse, middle, center
 ---
 class: middle
 
-# A retrospective cohort design, describing the rates of repeated hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
+# A retrospective cohort design, describing the rates of hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
 
 ---
 
@@ -86,9 +86,11 @@ class: inverse, middle, center
 
 ---
 class: middle, center
- **The questions that we can answer using a MSM are simply extensions of what we ask with classical survival analysis**
+
+ 
  **What is the probability of being in a state at time t? **
- - What is the probability of being in a state at 5 years?
+ 
+  - What is the probability of being in a state at 5 years?
   
  **How long does it take to reach a state?**
   - What is the median length of time to one state until moving to the next state?
@@ -99,7 +101,8 @@ class: middle, center
  **What is the risk of moving to a state (arrows)?**
   - What risk factors increase your risk of moving from one state to the next?
 
-
+???
+ The questions that we can answer using a MSM are simply extensions of what we ask with classical survival analysis
 
 ---
 ### Structure of the model
@@ -169,15 +172,6 @@ class: inverse, middle, center
 ]
 ]
 
----
-### Study cohort selection
-
-
-&lt;img src="img/Flowchart.png"  width="45%"&gt;
-
-???
-we are mainly focusing on institutionalisation from hospital ,i.e. patients admitted to hospital from private household and then being discharged to care institution after hospital admission.This will lead to a better understanding of the institutionalisation of dementia patients.
-
 
 ---
 ###Covariates used 
@@ -202,7 +196,7 @@ we are mainly focusing on institutionalisation from hospital ,i.e. patients admi
 
 * **Time since Index hospital admission (First admission after dementia diagnosis): 1 year, 2-4, 4+ **
 
-* **Length of stay, admission due to injury and time since first admission were used as time-varying covariates**.
+* **Length of stay, admission due to injury, Charlson score (CCI), frailty score (eFI), and time since first admission were used as time-varying covariates**.
 
 ---
 
@@ -246,24 +240,44 @@ we are mainly focusing on institutionalisation from hospital ,i.e. patients admi
 class: inverse, middle, center
 
 # Results
----
-####Hospital to institutionalisation (State 2 --&gt; State 3)
-&lt;img src="img/2-3.png"  width="50%"&gt;
 
 ---
-####Hospital discharge (Hospital --&gt;  Out) State 2 --&gt; State 4
-&lt;img src="img/2-4.png"  width="50%"&gt;
+&lt;img src="img/Pics_New/HR_heatmap2.jpg" width = "900" height = "600"&gt;
+---
+####Hospital to discharge out(State 2 --&gt; State 3)
+&lt;img src="img/Pics_New/hr_2_3.png"  width="50%"&gt;
+
+
+---
+####Subsequent hospitalisation once dischaarged out (State 3 --&gt; State 2)
+&lt;img src="img/Pics_New/hr_3_2.png"  width="50%"&gt;
+
+---
+####Hospital discharge to Institution (State 2 --&gt; State 4)
+&lt;img src="img/Pics_New/hr_2_4.png"  width="50%"&gt;
 
 ---
 
-####Hospital readmission: State 4 --&gt; State 2
-&lt;img src="img/4-2.png"  width="50%"&gt;
+#### Rehospitalisation from Institution : State 4 --&gt; State 2
+&lt;img src="img/Pics_New/hr_4_2.png"  width="50%"&gt;
 
 ---
 
 
 ####Death inside hospital: State 2 --&gt; State 5
-&lt;img src="img/2-5.png"  width="50%"&gt;
+&lt;img src="img/Pics_New/hr_2_5.png"  width="50%"&gt;
+
+---
+
+
+####Death outside Hospital State 3 --&gt; State 5
+&lt;img src="img/Pics_New/hr_3_5.png"  width="50%"&gt;
+
+---
+
+
+####Death inside Institution: State 4 --&gt; State 5
+&lt;img src="img/Pics_New/hr_4_5.png"  width="50%"&gt;
 
 ---
 class: inverse, middle, center
@@ -347,7 +361,7 @@ class:  middle, center
 
 * **However, we need a target value of x**
 
-* **Similar to in ordinary Cox model for example, with age and sex covariates,and we want to predict a survival curve, we have to provide values for a particular age and sex.**
+
 ---
 
 .pull-left[&lt;img src="img/predicted_insti.png"  width="100%"&gt;]
@@ -355,7 +369,7 @@ class:  middle, center
 .pull-right[&lt;img src="img/predicted_death.png"  width="100%"&gt;]
 
 
-
+* Curves using the original data and prediction from the Cox model match quite well.
 
 
 
