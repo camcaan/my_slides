@@ -293,7 +293,7 @@ class: inverse, middle, center
 
 #Summary
 
-* **Male dementia patients were at greater risk of hospital readmission,  and death**
+* **Male dementia patients were at greater risk of hospital readmission,and death**
 
 * **Increasing age was associated with institutional discharge directly from hospital and death **
 
