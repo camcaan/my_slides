@@ -68,7 +68,31 @@ class: middle
 # The aim is to jointly model and explore the factors associated with institutionalisation directly from hospital, length of stay in hospital and time to institutionalisation and death from dementia diagnosis.
 
 ---
+class: middle
+* **To examine the relationship between the outcomes such as hospital stays, institutionalisation and death in dementia patients with or without access to home care.**
 
+* **To examine the effects of patient's risk profiles on hospitalisations, time spent in hospital, institutionalisation and death.**
+
+* **We are testing whether access to formal or informal care in dementia patients and other prognostic factors have any associations with these outcomes.**
+
+---
+
+
+
+class: middle
+***Using Multi-state modelling approach because of its 3 attractive features***
+
+
+   * **Stratification of baseline hazards**
+   
+   * **Transition-specific effects**
+   
+   * **Ability to estimate overall transition probabilities**
+   
+   **The standard survival models are ill-equipeped t juggle al of these balls at once.**
+
+
+---
 
 class: inverse, middle, center
 
@@ -78,6 +102,12 @@ class: inverse, middle, center
 class: middle
 
 # A retrospective cohort design, describing the rates of hospital admissions, transition to an institution and death and the clinical factors affecting the rates of these events.
+
+---
+## Cohort selection
+
+
+<img src="img/Pics_NEW/selection.png"  width="55%">
 
 ---
 
@@ -90,6 +120,18 @@ class: middle
 This model concern both hospitalisations and institutionalisation and will evaluate the factors associated with transition into an institution with respect to repeated hospitalisation or death.
 ---
 
+class: middle
+
+* **In the literature a number of predictors for the institutionalisation of older people have been identified such as age, sex, gender, socio-economic status, care-giver availability, increasing frailty and comorbidity index, and length of hospital stay.**
+
+* **Our aim is to study the impact of important predictors of institutionalisation on transitions between hospital, institution and its effect on mortality within dementia patients.**
+
+* **We hypothesise that admission due to an injury, length of hospital admission play an important role on the risk of institutionalisation and mortality.**
+
+* **Also, from the literature we know little about an effective intervention that reduces or delays the risk of institutionalisation from hospital, especially the role of receiving home care in preventing or delaying institutionalisation and death in dementia patients.**
+
+
+---
 ###Covariates used 
 
 * **Sex**
@@ -119,6 +161,7 @@ This model concern both hospitalisations and institutionalisation and will evalu
 * **30 day readmission, Length of stay, admission due to injury, Charlson score (CCI), and frailty score (eFI), were used as time-varying covariates**.
 
 
+
 ---
 
 class: inverse, middle, center
@@ -142,11 +185,27 @@ class: inverse, middle, center
 
 ---
 
-* *With home care availability the chance of being institutionalised or dead are lowered*
 
-.pull-left[<img src="img/Pics_NEW/HC_Insti_aalen.png"  width="95%">]
 
-.pull-right[<img src="img/Pics_NEW/HC_death_aalen.png"  width="90%">]
+class: middle
+
+* **Despite the typical interest in the specific duration of each state (transition rate/intensity), we also have an implicit interest in the the process as a whole.**
+
+* **We can look at transition probabilities using the Aalen-Johansen curves which gives us the ability to look at a state transition in a holistic manner and we are able to see the probability of transitioning into a particular state at a point in time.**
+
+* **This allows s to estimate overall transition probabilities using information about every transition within the process, instead of only one transition within it.**
+
+
+---
+
+
+* *These plots shows the fraction of subjects currently in the Institutionalised and death state. For example the curves goes up when someone enter the institution state and down when they leave(go back to hospital, out of institution or die)*.
+
+.pull-left[<img src="img/Pics_NEW/HC_Insti_aalen.png"  width="80%">]
+
+.pull-right[<img src="img/Pics_NEW/HC_death_aalen.png"  width="70%">]
+
+
 
 ---
 
@@ -158,10 +217,14 @@ class: inverse, middle, center
 
 ---
 
-<img src="img/Pics_NEW/insti_subtypes_aalen.png"  width="600" height = "500">
+
+<img src="img/Pics_NEW/insti_subtypes_aalen.png"  width="50%" >
 
 * **Patients with Vascular dementia were admitted to an institution early compared to Alzheimer’s and unspecified dementia patients, they had a shorter life expectancy due to their transition to death **
+---
+<img src="img/Pics_NEW/subtypes_death_Aalen.png"  width="50%" >
 
+* **These curves shows the proportion of dementia subtype patients currently in the death state. It shows that with at any particular age or time the probability of death is higher for patients with rare dementia and is the lowest for Alzheimer's dementia out of the different subtypes.**
 
 ---
 <img src="img/Pics_NEW/frailty_insti_aalen.png"  width="55%">
@@ -214,10 +277,7 @@ class:  middle, center
 .pull-right[75-85 with AD, CCI 3-4, Moderately frail, with CVD and diabetic complications, No readmission, or long stay, or injury admission]
 ---
 
-<img src="img/Pics_NEW/85andover_HC_aLLsTATES.png"  width = "55%">
 
-.pull-right[85+ with AD, CCI => 5, severely frail, with CVD and diabetic complications, had 30 day readmission, and  long stay,and injury admission]
----
 class: inverse, middle, center
 
 # Sojourn times
@@ -229,10 +289,6 @@ class: inverse, middle, center
 ---
 
 
-####RMST for patients with and without homecare availability and whether suffering from CVD complications or not
-
-<img src="img/Pics_NEW/barplot_HC_CVD.png" width="70%">
----
 
 
 #Summary
@@ -245,7 +301,7 @@ class: inverse, middle, center
 
 * **AD and VaD were associated with institutionalisation**
 
-* **Patients with home care availability were spending less time in hospital, were less likley to be discharged to institution and their hazard of death was significantly lower as well.**
+* **Patients with home care availability were spending less time in hospital, were less likely to be discharged to institution and their hazard of death was significantly lower as well.**
 
 * **Patient who were also on anti-cardiovascular drugs had a greater risk of dying inside hospital as well as in institutional care**
 
