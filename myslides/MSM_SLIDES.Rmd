@@ -159,6 +159,14 @@ class: middle
 *  **30 days readmission **
 
 * **30 day readmission, Length of stay, admission due to injury, Charlson score (CCI), and frailty score (eFI), were used as time-varying covariates**.
+---
+
+<img src="img/Pics_NEW/GVIF.png"  width="55%">
+
+* **To check any correlation between some of the covariates used in the model, the variance inflation factor can be calculated for each of the terms in the model. This basically measure how much the variance of a particular coefficient is increased due to the presence of multi-collinearity in the model.**
+* **The table above shows the Generalised Variance Inflation Factor (GVIF) for some of the covariates which potentially could have some correlation.**
+
+* **A coomon rule of thumb is that if the GVIF is greater than 5-10 for any variable then multicollinearity may exist**
 
 
 
