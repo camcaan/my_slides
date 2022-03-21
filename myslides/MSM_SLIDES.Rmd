@@ -212,7 +212,7 @@ class: middle
 
 <img src="img/Pics_NEW/HC_CVD_Death_new.png"  width="600" height = "500">
 
-* **The availability of home care to dementia patients with CVD complications give them the rate of those with no CVD complications **
+* **The availability of home care to dementia patients with CVD complications give them the rate of those with no CVD complications**
 
 
 ---
