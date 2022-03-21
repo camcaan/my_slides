@@ -21,8 +21,8 @@ library(sf)
 library(rnaturalearth)
 
 
-CA <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv") %>%
-  filter(location == "Canada") %>%
+Italy <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv") %>%
+  filter(location == "Italy") %>%
   drop_na(new_cases_smoothed) %>%
   select(where(~!all(is.na(.x)))) # Drop columns that contain all NA values
 ```
@@ -60,18 +60,18 @@ ggplotly(cvv) %>%
 ```
 
 The log10 scale stabilizes the variance in the trend lines. It also allows a much easier comparison between the two trend lines since the vaccination number is much larger in scale than the case counts.
-
+4
 
 ### Vaccination progress
 ```{r}
 # Find out the rows where the second dose data are NAs when first dose were given at the start of the vaccination process
-rows <- which(is.na(CA$people_fully_vaccinated) & !is.na(CA$people_vaccinated))
-CA[rows, "people_fully_vaccinated"] = 0  # Change the NA values to 0
+rows <- which(is.na(Italy$people_fully_vaccinated) & !is.na(Italy$people_vaccinated))
+Italy[rows, "people_fully_vaccinated"] = 0  # Change the NA values to 0
 
-vaccine <- CA %>%
+vaccine <- Italy %>%
   mutate(`First dose` = round(people_vaccinated / population * 100, 3),
          `Fully vaccinated` = round(people_fully_vaccinated / population  * 100, 3)) %>%
-  select(date, `First dose`, `Fully vaccinated`) %>%
+  select(date, `First dose`, `Fully vaccinated`)%>%
   drop_na(`First dose`) %>%
   gather("doses", "Population share", -c(date)) %>%
   mutate(doses = factor(doses))
@@ -81,7 +81,7 @@ vac <- ggplot(data = vaccine, aes(x = date, y = `Population share`, fill = doses
   theme_classic() +
   scale_fill_brewer(palette = "Green") +
   scale_x_date(date_breaks = "2 month") +
-  labs(title = "Covid-19 vaccination progress in Canada ",
+  labs(title = "Covid-19 vaccination progress in Italy ",
        x = "Date", y = "Share of Population(%)",
        fill = NULL, caption = "Data: OWID") +
   theme(plot.title = element_text(hjust = -0.25), legend.position = "bottom")
